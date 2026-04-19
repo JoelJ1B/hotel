@@ -1,0 +1,572 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --teal-dark: #085041;
+  --teal-mid: #1D9E75;
+  --teal-light: #5DCAA5;
+  --teal-pale: #E1F5EE;
+  --navy: #0F2D3A;
+  --gold: #C8923A;
+  --gold-pale: #FDF3E7;
+  --white: #FFFFFF;
+  --gray-50: #F7F8F8;
+  --gray-100: #EAECEC;
+  --gray-400: #8A9499;
+  --gray-700: #374045;
+}
+
+.app { display: flex; height: 780px; font-family: var(--font-sans); background: var(--gray-50); border-radius: var(--border-radius-lg); overflow: hidden; border: 0.5px solid var(--color-border-tertiary); }
+
+/* SIDEBAR */
+.sidebar { width: 200px; background: var(--navy); display: flex; flex-direction: column; flex-shrink: 0; }
+.sidebar-logo { padding: 22px 18px 18px; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+.logo-badge { width: 34px; height: 34px; background: var(--teal-mid); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+.logo-badge svg { width: 18px; height: 18px; fill: white; }
+.logo-name { font-size: 13px; font-weight: 500; color: #fff; letter-spacing: 0.01em; }
+.logo-sub { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1px; }
+
+.nav { padding: 12px 10px; flex: 1; }
+.nav-section { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 14px 8px 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; margin-bottom: 2px; color: rgba(255,255,255,0.55); font-size: 13px; transition: all 0.15s; }
+.nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+.nav-item.active { background: var(--teal-dark); color: #fff; }
+.nav-icon { width: 16px; height: 16px; opacity: 0.7; flex-shrink: 0; }
+.nav-item.active .nav-icon { opacity: 1; }
+
+.sidebar-footer { padding: 14px 18px; border-top: 0.5px solid rgba(255,255,255,0.08); }
+.user-row { display: flex; align-items: center; gap: 9px; }
+.user-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--teal-mid); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: white; flex-shrink: 0; }
+.user-name { font-size: 12px; color: rgba(255,255,255,0.7); }
+.user-role { font-size: 10px; color: rgba(255,255,255,0.35); }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { background: white; border-bottom: 0.5px solid var(--gray-100); padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.page-title { font-size: 15px; font-weight: 500; color: var(--gray-700); }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.date-badge { font-size: 11px; color: var(--gray-400); }
+.notif-btn { width: 30px; height: 30px; border-radius: 8px; background: var(--gray-50); border: 0.5px solid var(--gray-100); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.notif-dot { width: 6px; height: 6px; background: #E24B4A; border-radius: 50%; margin: auto; }
+
+.content { flex: 1; overflow-y: auto; padding: 20px 24px; }
+
+/* SCREENS */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* DASHBOARD */
+.metrics-row { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin-bottom: 20px; }
+.metric-card { background: white; border: 0.5px solid var(--gray-100); border-radius: 10px; padding: 14px 16px; }
+.metric-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray-400); margin-bottom: 8px; }
+.metric-val { font-size: 26px; font-weight: 500; color: var(--gray-700); line-height: 1; }
+.metric-sub { font-size: 11px; color: var(--gray-400); margin-top: 5px; }
+.metric-up { color: var(--teal-mid); }
+.metric-accent { border-left: 3px solid var(--teal-mid); }
+.metric-accent2 { border-left: 3px solid var(--gold); }
+.metric-accent3 { border-left: 3px solid #E24B4A; }
+.metric-accent4 { border-left: 3px solid #378ADD; }
+
+.dashboard-grid { display: grid; grid-template-columns: 1fr 280px; gap: 16px; }
+.section-title { font-size: 12px; font-weight: 500; color: var(--gray-700); margin-bottom: 12px; letter-spacing: 0.01em; }
+
+.activity-card { background: white; border: 0.5px solid var(--gray-100); border-radius: 10px; padding: 16px; }
+.activity-item { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 0.5px solid var(--gray-100); }
+.activity-item:last-child { border-bottom: none; }
+.act-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.act-dot.in { background: var(--teal-mid); }
+.act-dot.out { background: var(--gold); }
+.act-dot.alert { background: #E24B4A; }
+.act-text { flex: 1; font-size: 12px; color: var(--gray-700); }
+.act-time { font-size: 11px; color: var(--gray-400); }
+
+.sidebar-cards { display: flex; flex-direction: column; gap: 12px; }
+.quick-card { background: white; border: 0.5px solid var(--gray-100); border-radius: 10px; padding: 14px 16px; }
+.room-mini-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 10px; }
+.room-dot { height: 18px; border-radius: 4px; }
+.room-dot.occ { background: var(--teal-mid); }
+.room-dot.free { background: var(--gray-100); }
+.room-dot.clean { background: var(--gold); opacity: 0.7; }
+.legend-row { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--gray-400); }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+/* CHECK-IN */
+.form-card { background: white; border: 0.5px solid var(--gray-100); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-label { font-size: 11px; color: var(--gray-400); letter-spacing: 0.05em; text-transform: uppercase; }
+.form-input { background: var(--gray-50); border: 0.5px solid var(--gray-100); border-radius: 8px; padding: 9px 12px; font-size: 13px; color: var(--gray-700); }
+.form-input.accent { border-color: var(--teal-mid); background: var(--teal-pale); }
+.form-select { background: var(--gray-50); border: 0.5px solid var(--gray-100); border-radius: 8px; padding: 9px 12px; font-size: 13px; color: var(--gray-700); }
+.room-picker { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top: 10px; }
+.room-btn { height: 32px; border-radius: 6px; border: 0.5px solid var(--gray-100); background: var(--gray-50); font-size: 11px; color: var(--gray-400); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.room-btn.avail { background: var(--teal-pale); border-color: var(--teal-light); color: var(--teal-dark); cursor: pointer; }
+.room-btn.sel { background: var(--teal-mid); border-color: var(--teal-mid); color: white; }
+.room-btn.occ { background: var(--gray-100); color: var(--gray-400); cursor: not-allowed; }
+.btn-primary { background: var(--teal-dark); color: white; border: none; border-radius: 8px; padding: 10px 22px; font-size: 13px; cursor: pointer; font-weight: 500; }
+.btn-secondary { background: var(--gray-50); color: var(--gray-700); border: 0.5px solid var(--gray-100); border-radius: 8px; padding: 10px 22px; font-size: 13px; cursor: pointer; }
+.btn-row { display: flex; gap: 10px; margin-top: 16px; }
+.form-full { grid-column: 1 / -1; }
+
+/* ROOMS */
+.room-grid { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; }
+.room-card { background: white; border: 0.5px solid var(--gray-100); border-radius: 10px; padding: 14px; cursor: pointer; transition: border-color 0.15s; }
+.room-card:hover { border-color: var(--teal-light); }
+.room-num { font-size: 18px; font-weight: 500; color: var(--gray-700); }
+.room-type { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-400); margin-top: 2px; }
+.room-status { margin-top: 10px; display: inline-block; font-size: 10px; padding: 3px 8px; border-radius: 100px; font-weight: 500; }
+.status-occ { background: var(--teal-pale); color: var(--teal-dark); }
+.status-free { background: #EAF3DE; color: #3B6D11; }
+.status-clean { background: #FAEEDA; color: #854F0B; }
+.room-guest { font-size: 11px; color: var(--gray-400); margin-top: 6px; }
+.filter-row { display: flex; gap: 8px; margin-bottom: 16px; }
+.filter-btn { font-size: 11px; padding: 6px 14px; border-radius: 100px; border: 0.5px solid var(--gray-100); background: white; color: var(--gray-400); cursor: pointer; }
+.filter-btn.active-f { background: var(--teal-pale); border-color: var(--teal-light); color: var(--teal-dark); }
+
+/* CHECKOUT */
+.checkout-layout { display: grid; grid-template-columns: 1fr 300px; gap: 16px; }
+.bill-card { background: white; border: 0.5px solid var(--gray-100); border-radius: 10px; padding: 18px; }
+.bill-header { padding-bottom: 12px; border-bottom: 0.5px solid var(--gray-100); margin-bottom: 14px; }
+.bill-title { font-size: 14px; font-weight: 500; color: var(--gray-700); }
+.bill-sub { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+.bill-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 0.5px solid var(--gray-100); font-size: 12px; color: var(--gray-700); }
+.bill-row:last-child { border: none; }
+.bill-total { display: flex; justify-content: space-between; padding: 12px 0 0; font-size: 14px; font-weight: 500; color: var(--gray-700); border-top: 0.5px solid var(--gray-100); margin-top: 8px; }
+.total-amount { color: var(--teal-dark); font-size: 18px; }
+.payment-methods { display: flex; gap: 8px; margin: 14px 0; }
+.pay-btn { flex: 1; padding: 9px; border: 0.5px solid var(--gray-100); border-radius: 8px; background: var(--gray-50); font-size: 11px; color: var(--gray-700); cursor: pointer; text-align: center; }
+.pay-btn.sel-pay { border-color: var(--teal-mid); background: var(--teal-pale); color: var(--teal-dark); }
+
+/* REPORTS */
+.report-tabs { display: flex; gap: 0; margin-bottom: 16px; border-bottom: 0.5px solid var(--gray-100); }
+.rtab { padding: 9px 16px; font-size: 12px; color: var(--gray-400); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -0.5px; }
+.rtab.active-r { color: var(--teal-dark); border-color: var(--teal-mid); }
+.bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 120px; padding: 0 4px; }
+.bar { flex: 1; background: var(--teal-pale); border-radius: 4px 4px 0 0; border-bottom: 2px solid var(--teal-mid); position: relative; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; }
+.bar-label { font-size: 9px; color: var(--gray-400); position: absolute; bottom: -16px; }
+.bar-val { font-size: 9px; color: var(--teal-dark); font-weight: 500; position: absolute; top: -16px; }
+.stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-top: 20px; }
+.stat-card { background: white; border: 0.5px solid var(--gray-100); border-radius: 10px; padding: 14px; }
+.stat-num { font-size: 22px; font-weight: 500; color: var(--gray-700); }
+.stat-label { font-size: 10px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; }
+
+/* REMINDER */
+.reminder-list { display: flex; flex-direction: column; gap: 10px; }
+.reminder-item { background: white; border: 0.5px solid var(--gray-100); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
+.rem-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rem-icon.wake { background: #FAEEDA; }
+.rem-icon.checkout { background: var(--teal-pale); }
+.rem-icon.clean { background: #E6F1FB; }
+.rem-content { flex: 1; }
+.rem-title { font-size: 13px; font-weight: 500; color: var(--gray-700); }
+.rem-sub { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+.rem-time { font-size: 12px; color: var(--gray-700); text-align: right; }
+.rem-status { font-size: 10px; text-align: right; margin-top: 2px; }
+.rem-pending { color: var(--gold); }
+.rem-sent { color: var(--teal-mid); }
+.add-reminder { display: flex; align-items: center; gap: 10px; background: var(--teal-pale); border: 0.5px dashed var(--teal-light); border-radius: 10px; padding: 12px 16px; cursor: pointer; margin-top: 8px; }
+.add-icon { width: 28px; height: 28px; background: var(--teal-mid); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; flex-shrink: 0; }
+.add-text { font-size: 12px; color: var(--teal-dark); }
+</style>
+
+<div class="app">
+  <h2 class="sr-only">宝宝旅店管理系统 UI 设计预览</h2>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-badge">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      </div>
+      <div class="logo-name">宝宝旅店</div>
+      <div class="logo-sub">Baby Hotel</div>
+    </div>
+    <div class="nav">
+      <div class="nav-section">主菜单</div>
+      <div class="nav-item active" onclick="showScreen('dashboard',this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+        主控台
+      </div>
+      <div class="nav-item" onclick="showScreen('checkin',this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm-5 9a5 5 0 0 1 10 0H3z"/></svg>
+        入住登记
+      </div>
+      <div class="nav-item" onclick="showScreen('rooms',this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="3" width="14" height="10" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1 8h14"/><path d="M6 8v5"/></svg>
+        房间状态
+      </div>
+      <div class="nav-item" onclick="showScreen('checkout',this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm1 4h10M5 10h4"/></svg>
+        退房结算
+      </div>
+      <div class="nav-section">服务</div>
+      <div class="nav-item" onclick="showScreen('reminder',this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a5 5 0 0 1 5 5v3l1.5 1.5v.5H1.5V10.5L3 9V6a5 5 0 0 1 5-5zm-1.5 11h3a1.5 1.5 0 0 1-3 0z"/></svg>
+        提醒服务
+      </div>
+      <div class="nav-item" onclick="showScreen('reports',this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M2 12L5 7l3 3 3-4 3 3" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="1" y="1" width="14" height="14" rx="1" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+        营业报表
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar">前台</div>
+        <div>
+          <div class="user-name">林佑恩</div>
+          <div class="user-role">前台接待员</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN AREA -->
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title" id="page-title">主控台</div>
+      <div class="topbar-right">
+        <span class="date-badge">2025年6月15日 · 星期日</span>
+        <div class="notif-btn"><div class="notif-dot"></div></div>
+      </div>
+    </div>
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="screen active" id="screen-dashboard">
+        <div class="metrics-row">
+          <div class="metric-card metric-accent">
+            <div class="metric-label">今日入住</div>
+            <div class="metric-val">38</div>
+            <div class="metric-sub metric-up">↑ 入住率 76%</div>
+          </div>
+          <div class="metric-card metric-accent2">
+            <div class="metric-label">今日退房</div>
+            <div class="metric-val">12</div>
+            <div class="metric-sub" style="color:var(--gray-400)">待退房 3 间</div>
+          </div>
+          <div class="metric-card metric-accent3">
+            <div class="metric-label">空房数量</div>
+            <div class="metric-val">12</div>
+            <div class="metric-sub" style="color:var(--gray-400)">含 2 间需清洁</div>
+          </div>
+          <div class="metric-card metric-accent4">
+            <div class="metric-label">今日营收</div>
+            <div class="metric-val">RM 9,420</div>
+            <div class="metric-sub metric-up">↑ 较昨日 +8%</div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div>
+            <div class="section-title">最近动态</div>
+            <div class="activity-card">
+              <div class="activity-item"><div class="act-dot in"></div><div class="act-text">陈先生 入住 302 室（标准单人）</div><div class="act-time">09:14</div></div>
+              <div class="activity-item"><div class="act-dot out"></div><div class="act-text">王女士 退房 115 室 · 已结清 RM 480</div><div class="act-time">09:02</div></div>
+              <div class="activity-item"><div class="act-dot alert"></div><div class="act-text">提醒 · 205 室 叫醒服务（07:30）已过期未确认</div><div class="act-time">07:35</div></div>
+              <div class="activity-item"><div class="act-dot in"></div><div class="act-text">李先生 入住 418 室（豪华双人）</div><div class="act-time">08:50</div></div>
+              <div class="activity-item"><div class="act-dot out"></div><div class="act-text">报表生成 · 6月14日营业日报已导出</div><div class="act-time">08:00</div></div>
+              <div class="activity-item"><div class="act-dot in"></div><div class="act-text">张女士 入住 510 室（套房）</div><div class="act-time">08:32</div></div>
+            </div>
+          </div>
+
+          <div class="sidebar-cards">
+            <div class="quick-card">
+              <div class="section-title">房间总览（50间）</div>
+              <div class="room-mini-grid" id="mini-rooms"></div>
+              <div class="legend-row">
+                <div class="legend-item"><div class="legend-dot" style="background:var(--teal-mid)"></div>已入住</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#C0DD97"></div>空闲</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#FAC775;opacity:0.8"></div>清洁中</div>
+              </div>
+            </div>
+            <div class="quick-card">
+              <div class="section-title">今日提醒</div>
+              <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+                <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--gray-700)">叫醒服务</span><span style="color:var(--teal-mid);font-weight:500">5 件待处理</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--gray-700)">退房提醒</span><span style="color:var(--gold);font-weight:500">3 件待发送</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--gray-700)">账单异常</span><span style="color:#E24B4A;font-weight:500">1 件待核查</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHECK IN -->
+      <div class="screen" id="screen-checkin">
+        <div class="form-card">
+          <div class="section-title" style="margin-bottom:16px;">住客资料</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <div class="form-label">姓名</div>
+              <div class="form-input">陈宥心</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">证件号码（IC/护照）</div>
+              <div class="form-input">A1234567</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">联络电话</div>
+              <div class="form-input">012-3456789</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">电子邮件</div>
+              <div class="form-input">guest@email.com</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">入住日期</div>
+              <div class="form-input accent">2025-06-15</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">退房日期</div>
+              <div class="form-input">2025-06-17</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">房型</div>
+              <div class="form-select">标准双人房 · RM 180/晚</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">住宿天数</div>
+              <div class="form-input accent">2 晚 · RM 360</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="section-title">选择房间</div>
+          <div style="display:flex;gap:10px;margin:8px 0 12px;font-size:11px;">
+            <span style="display:flex;align-items:center;gap:5px;color:var(--teal-dark)"><div style="width:10px;height:10px;background:var(--teal-pale);border:1px solid var(--teal-light);border-radius:3px"></div>可用</span>
+            <span style="display:flex;align-items:center;gap:5px;color:var(--gray-400)"><div style="width:10px;height:10px;background:var(--gray-100);border-radius:3px"></div>已占用</span>
+            <span style="display:flex;align-items:center;gap:5px;color:var(--teal-dark)"><div style="width:10px;height:10px;background:var(--teal-mid);border-radius:3px"></div>已选</span>
+          </div>
+          <div class="room-picker" id="room-picker"></div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-primary">✓ 确认入住登记</button>
+          <button class="btn-secondary">清空表单</button>
+        </div>
+      </div>
+
+      <!-- ROOMS -->
+      <div class="screen" id="screen-rooms">
+        <div class="filter-row">
+          <div class="filter-btn active-f" onclick="filterRooms('all',this)">全部（50）</div>
+          <div class="filter-btn" onclick="filterRooms('occ',this)">已入住（38）</div>
+          <div class="filter-btn" onclick="filterRooms('free',this)">空闲（10）</div>
+          <div class="filter-btn" onclick="filterRooms('clean',this)">清洁中（2）</div>
+        </div>
+        <div class="room-grid" id="room-grid"></div>
+      </div>
+
+      <!-- CHECKOUT -->
+      <div class="screen" id="screen-checkout">
+        <div class="checkout-layout">
+          <div>
+            <div class="form-card" style="margin-bottom:14px;">
+              <div class="section-title" style="margin-bottom:12px;">查找住客</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <div class="form-label">房号 / 住客姓名</div>
+                  <div class="form-input accent">302 · 陈先生</div>
+                </div>
+                <div class="form-group">
+                  <div class="form-label">入住日期</div>
+                  <div class="form-input">2025-06-13</div>
+                </div>
+              </div>
+            </div>
+            <div class="bill-card">
+              <div class="bill-header">
+                <div class="bill-title">账单明细 · 302 室</div>
+                <div class="bill-sub">陈先生 · 入住 2 晚</div>
+              </div>
+              <div class="bill-row"><span>住宿费（标准单人 × 2 晚）</span><span>RM 320</span></div>
+              <div class="bill-row"><span>叫醒服务</span><span>RM 0</span></div>
+              <div class="bill-row"><span>客房餐饮</span><span>RM 45</span></div>
+              <div class="bill-row"><span>洗衣服务</span><span>RM 18</span></div>
+              <div class="bill-row"><span>旅游税（RM 10/晚 × 2）</span><span>RM 20</span></div>
+              <div class="bill-total"><span>应付总额</span><span class="total-amount">RM 403</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="bill-card">
+              <div class="section-title" style="margin-bottom:12px;">付款方式</div>
+              <div class="payment-methods">
+                <div class="pay-btn sel-pay">现金</div>
+                <div class="pay-btn">信用卡</div>
+                <div class="pay-btn">转账</div>
+              </div>
+              <div class="form-group" style="margin-top:10px;">
+                <div class="form-label">收款金额</div>
+                <div class="form-input">RM 403</div>
+              </div>
+              <div class="form-group" style="margin-top:10px;">
+                <div class="form-label">找零</div>
+                <div class="form-input accent">RM 0</div>
+              </div>
+              <button class="btn-primary" style="width:100%;margin-top:16px;text-align:center;">确认退房 · 出具收据</button>
+              <button class="btn-secondary" style="width:100%;margin-top:8px;text-align:center;">打印账单预览</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REMINDERS -->
+      <div class="screen" id="screen-reminder">
+        <div class="reminder-list">
+          <div class="reminder-item">
+            <div class="rem-icon wake">🔔</div>
+            <div class="rem-content">
+              <div class="rem-title">叫醒服务 · 205 室</div>
+              <div class="rem-sub">黄禧恩女士 · 要求 07:30 叫醒</div>
+            </div>
+            <div>
+              <div class="rem-time">07:30</div>
+              <div class="rem-status rem-pending">待确认</div>
+            </div>
+          </div>
+          <div class="reminder-item">
+            <div class="rem-icon checkout">🏨</div>
+            <div class="rem-content">
+              <div class="rem-title">退房提醒 · 118 室</div>
+              <div class="rem-sub">关凯心先生 · 今日 12:00 退房</div>
+            </div>
+            <div>
+              <div class="rem-time">11:00</div>
+              <div class="rem-status rem-sent">已发送</div>
+            </div>
+          </div>
+          <div class="reminder-item">
+            <div class="rem-icon clean">🧹</div>
+            <div class="rem-content">
+              <div class="rem-title">客房清洁 · 301 室</div>
+              <div class="rem-sub">退房后清洁 · 分配给客房服务部</div>
+            </div>
+            <div>
+              <div class="rem-time">12:00</div>
+              <div class="rem-status rem-pending">待处理</div>
+            </div>
+          </div>
+          <div class="reminder-item">
+            <div class="rem-icon wake">🔔</div>
+            <div class="rem-content">
+              <div class="rem-title">叫醒服务 · 412 室</div>
+              <div class="rem-sub">赖宣言先生 · 要求 08:00 叫醒</div>
+            </div>
+            <div>
+              <div class="rem-time">08:00</div>
+              <div class="rem-status rem-sent">已发送</div>
+            </div>
+          </div>
+          <div class="reminder-item">
+            <div class="rem-icon checkout">🏨</div>
+            <div class="rem-content">
+              <div class="rem-title">退房提醒 · 509 室</div>
+              <div class="rem-sub">叶泰齐先生 · 今日 14:00 退房</div>
+            </div>
+            <div>
+              <div class="rem-time">13:00</div>
+              <div class="rem-status rem-pending">待发送</div>
+            </div>
+          </div>
+          <div class="add-reminder">
+            <div class="add-icon">+</div>
+            <div class="add-text">新增提醒服务</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPORTS -->
+      <div class="screen" id="screen-reports">
+        <div class="report-tabs">
+          <div class="rtab active-r">每日报表</div>
+          <div class="rtab">每周汇总</div>
+          <div class="rtab">每月总览</div>
+        </div>
+        <div class="form-card">
+          <div class="section-title" style="margin-bottom:16px;">6月份营收趋势（RM）</div>
+          <div class="bar-chart">
+            <div class="bar" style="height:45%"><span class="bar-val">6.2k</span><span class="bar-label">6/9</span></div>
+            <div class="bar" style="height:60%"><span class="bar-val">8.1k</span><span class="bar-label">6/10</span></div>
+            <div class="bar" style="height:50%"><span class="bar-val">6.9k</span><span class="bar-label">6/11</span></div>
+            <div class="bar" style="height:72%"><span class="bar-val">9.7k</span><span class="bar-label">6/12</span></div>
+            <div class="bar" style="height:55%"><span class="bar-val">7.4k</span><span class="bar-label">6/13</span></div>
+            <div class="bar" style="height:80%"><span class="bar-val">10.8k</span><span class="bar-label">6/14</span></div>
+            <div class="bar" style="height:70%;border-color:var(--teal-dark);background:var(--teal-light);opacity:0.5"><span class="bar-val">9.4k</span><span class="bar-label">今日</span></div>
+          </div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-num">76%</div>
+            <div class="stat-label">平均入住率</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">RM 8,940</div>
+            <div class="stat-label">本周平均营收</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">2.4 晚</div>
+            <div class="stat-label">平均住宿天数</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">RM 235</div>
+            <div class="stat-label">每间客房平均收入</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">94%</div>
+            <div class="stat-label">账单结清率</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">12 件</div>
+            <div class="stat-label">本周提醒服务</div>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:16px;">
+          <button class="btn-primary">导出 PDF 报告</button>
+          <button class="btn-secondary">导出 CSV 数据</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const titles = { dashboard:'主控台', checkin:'入住登记', rooms:'房间状态', checkout:'退房结算', reminder:'提醒服务', reports:'营业报表' };
+function showScreen(id, el) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('page-title').textContent = titles[id];
+}
+
+// Mini room grid
+const mr = document.getElementById('mini-rooms');
+const states = Array(50).fill(0).map((_,i)=> i<38 ? 'occ' : i<48 ? 'free' : 'clean');
+states.forEach(s=>{ const d=document.createElement('div'); d.className='room-dot '+s; mr.appendChild(d); });
+
+// Room picker (check-in)
+const rp = document.getElementById('room-picker');
+const rpStates = Array(50).fill(0).map((_,i)=> i===4?'sel': i<38?'occ':'avail');
+rpStates.forEach((s,i)=>{
+  const d=document.createElement('div'); d.className='room-btn '+s;
+  d.textContent=(i+1).toString().padStart(3,'0');
+  if(s==='avail'||s==='sel') d.onclick=()=>{ document.querySelectorAll('.room-btn').forEach(b=>{ if(b.classList.contains('sel')){b.classList.remove('sel');b.classList.add('avail');} }); d.classList.remove('avail');d.classList.add('sel'); };
+  rp.appendChild(d);
+});
+
+// Room grid
+const rg = document.getElementById('room-grid');
+const types = ['标准单人','标准双人','豪华双人','套房'];
+const rgStates=['occ','occ','occ','free','occ','clean','occ','occ','free','occ','occ','occ','occ','occ','free','occ','occ','clean','occ','occ'];
+const guests=['陈先生','王女士','李先生','—','张先生','(清洁中)','刘女士','赵先生','—','黄女士','吴先生','周女士','郑先生','孙先生','—','朱女士','钱先生','(清洁中)','胡先生','韩女士'];
+rgStates.forEach((s,i)=>{
+  const d=document.createElement('div'); d.className='room-card';
+  const label={occ:'已入住',free:'空闲',clean:'清洁中'}[s];
+  const cls={occ:'status-occ',free:'status-free',clean:'status-clean'}[s];
+  d.innerHTML=`<div class="room-num">${String(i+101)}</div><div class="room-type">${types[i%4]}</div><div class="room-status ${cls}">${label}</div><div class="room-guest">${guests[i]}</div>`;
+  rg.appendChild(d);
+});
+</script>
